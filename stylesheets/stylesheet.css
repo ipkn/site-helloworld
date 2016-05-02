@@ -16,7 +16,7 @@ a {
     text-decoration: underline; }
 
 .btn {
-  display: none;
+  display: inline-block;
   margin-bottom: 1rem;
   color: rgba(255, 255, 255, 0.7);
   background-color: rgba(255, 255, 255, 0.08);
@@ -45,7 +45,7 @@ a {
 
 @media screen and (max-width: 42em) {
   .btn {
-    display: none;
+    display: block;
     width: 100%;
     padding: 0.75rem;
     font-size: 0.9rem; }
