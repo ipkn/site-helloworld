@@ -1,0 +1,215 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="static/ultra.css" rel="stylesheet" type="text/css">
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script src="static/jquery.textarea.js" type="text/javascript"></script>
+<!--[if IE]><script type="text/javascript" src="static/excanvas.js"></script><![endif]-->
+<script src="static/robot.js" type="text/javascript"></script>
+</head>
+<body>
+<div class="cover" style="width:1120px;border:0px">
+<div class="header">
+    <div class="title">
+    <H1>ULTRA.js:</H1> <H1>U</h1>LTRA <h1>L</h1>anguage <h1>TRA</h1>ining (javascript version)
+</div>
+
+</div>
+<div class="content">
+<script type="text/javascript">
+var ie_dx = 0;
+var ie_dy = 1;
+</script>
+<!--[if IE]>
+<script type="text/javascript">
+ie_dx = 1;
+ie_dy = 2;
+</script>
+<![endif]-->
+<script type="text/javascript">
+    var img = new Image();
+    img.src = 'static/good.png';
+    var STEP_TIME = 300;
+    var TILE_SIZE = 19;
+    var TIME_INTERVAL = 23;
+    var BOARD_SIZE = 21;
+    var canvas, ctx;
+    var game;
+    var cmd = "";
+
+    //$(document).ready(function(){
+    $(window).load(function(){
+        $("textarea").tabby();
+        var p = $("table.ground").offset();
+        $("canvas#cv").css("left", p.left+"px").css("top", p.top+"px").css("position","absolute");
+        game = new Game(BOARD_SIZE,BOARD_SIZE,10,10,"N", "white", "orange");
+        load();
+    });
+
+    function rad(deg)
+    {
+        return deg * 3.1415926535/180;
+    }
+
+
+    function drawGround()
+    {
+        var tbl = document.getElementById("ground_table");
+        var tds = tbl.getElementsByTagName("td");
+        for(var i = 0; i < BOARD_SIZE; i ++)
+        {
+            for(var j = 0; j < BOARD_SIZE; j ++)
+            {
+                tds[i*BOARD_SIZE+j].style.backgroundColor = game.panel.getTile(j,i);
+            }
+        }
+    }
+    var lastTime = -1;
+    var currentProgress = 0;
+    var currentTime=-1;
+    var loopTimer = null;
+    function reset() {
+        lastTime = -1;
+        currentTime = -1;
+        currentProgress = 0;
+        if (loopTimer)
+            clearTimeout(loopTimer);
+        loopTimer = null;
+        loop();
+    }
+
+    function loop() {
+        if (currentTime == -1)
+        {
+            currentTime = 0;
+            lastTime = (new Date()).getTime();
+            currentProgress = 0;
+        }
+        else
+        {
+            var nTime = (new Date()).getTime();
+            currentProgress += (nTime - lastTime)*1.0/STEP_TIME;
+            currentTime += nTime - lastTime;
+            lastTime = nTime;
+        }
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        var jobRemains = game.robot.progress(currentProgress);
+        var p = game.robot.getPosition()
+        //document.title = Math.floor(p.x) +  ' ' + Math.floor(p.y) + ' ' + Math.floor(p.a);
+
+        drawGround();
+        ctx.save();
+        if (p.stuck)
+        {
+            if (p.a == 0 || p.a == 180)
+                ctx.translate(Math.random() * TILE_SIZE * 0.1 - TILE_SIZE * 0.05, 0);
+            else
+                ctx.translate(0, Math.random() * TILE_SIZE * 0.1 - TILE_SIZE * 0.05);
+        }
+        ctx.translate(TILE_SIZE*p.x+9.5+ie_dx, TILE_SIZE*p.y+9.5+ie_dy);
+        ctx.rotate(rad(-p.a));
+        ctx.translate(-9.5, -9.5);
+        ctx.drawImage(img, 0, 0);
+        ctx.restore();
+
+        currentTime += TIME_INTERVAL;
+        if (jobRemains)
+            loopTimer = setTimeout(loop, TIME_INTERVAL);
+    }
+
+
+    function load() {
+        canvas = document.getElementById("cv");
+        ctx = canvas.getContext("2d");
+        cmd = "";
+        game.init(cmd);
+        reset();
+    }
+
+    var cmd = "";
+    function move() {
+        cmd += "M";
+    }
+    function left() {
+        cmd += "L";
+    }
+    function right() {
+        cmd += "R";
+    }
+
+
+
+    function go() {
+        try {
+            cmd = "";
+            eval($("#code").val());
+            $("#error_msg").html("");
+            game.init(cmd);
+            reset();
+        } catch(e) {
+            alert("에러가 발생했습니다. 코드에 에러가 없는지 확인해주세요.\n(자세한 에러는 왼쪽 아래를 참고해주세요.)");
+            $("#error_msg").html("<pre>"+e+"</pre>");
+        }
+
+    }
+</script>
+
+<div>
+<form autocomplete="false">
+<div style="width:420px; height:420px; margin: 30px; float:left">
+<table class="ground" id = "ground_table">
+<tr> <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td> </tr>
+<tr> <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td> </tr>
+<tr> <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td> </tr>
+<tr> <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td> </tr>
+<tr> <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td> </tr>
+<tr> <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td> </tr>
+<tr> <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td> </tr>
+<tr> <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td> </tr>
+<tr> <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td> </tr>
+<tr> <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td> </tr>
+<tr> <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td> </tr>
+<tr> <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td> </tr>
+<tr> <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td> </tr>
+<tr> <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td> </tr>
+<tr> <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td> </tr>
+<tr> <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td> </tr>
+<tr> <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td> </tr>
+<tr> <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td> </tr>
+<tr> <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td> </tr>
+<tr> <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td> </tr>
+<tr> <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td> </tr>
+</table>
+<canvas id="cv" width="399" height="399"></canvas>
+</div>
+<div style="width:399px; clear:left;float:left; ">
+속도 : 
+<input type="radio" name="speed" value="1000" onclick="STEP_TIME = this.value;"/>느리게
+<input type="radio" name="speed" checked="checked" value="300" onclick="STEP_TIME = this.value;"/>보통
+<input type="radio" name="speed" value="100" onclick="STEP_TIME = this.value;"/>빠르게
+<input type="radio" name="speed" value="8" onclick="STEP_TIME = this.value;"/>미칠듯이<br/>
+<div id="error_msg">
+</div>
+</div>
+<div>
+<input type="button" value="GO!" onclick="go();"/><br/>
+<textarea cols="50" rows="30" id="code" >
+move()
+left()
+move()
+right()
+move()
+</textarea>
+
+</div>
+</div>
+</form>
+
+</div>
+</div>
+</body>
+</html>
+
