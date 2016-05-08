@@ -1,0 +1,85 @@
+div.header div.title
+{
+	margin-bottom: 1em;
+}
+div#error_msg
+{
+	font-family:monospace;
+	text-align:left;
+	color: #f00;
+}
+
+div.header
+{
+	font-family:verdana;
+	background:#000;
+	color:#fff;
+	padding:1em;
+	border: 5px outset #888;
+}
+div.header h1
+{
+	display:inline;
+}
+
+div.content
+{
+	border:1px solid black;
+	padding: 15px 15px 15px 15px;
+	text-align:center;
+}
+
+div.formbox
+{
+	margin: 2em auto;
+	width: 300px; 
+	padding: 15px; 
+	border: 5px inset #888; 
+	text-align: center; 
+	background-color:black; 
+	font-family:verdana; 
+	font-weight:bold;
+}
+
+div.menu a
+{
+	color: white
+}
+
+
+canvas {
+	padding:0px ;
+	margin:0px;
+}
+
+table.ground
+{
+	border:none;
+	padding:0px;
+	margin:0px;
+	border-collapse:collapse;
+}
+table.ground tr
+{
+	height:19px;
+	padding:0px 0px 0px 0px;
+	margin:0px 0px 0px 0px;
+	border:none;
+}
+table.ground tr td
+{
+	border:1px solid #ddd;
+	width:18px;
+	background-color:white;
+	padding:0px 0px 0px 0px;
+	margin:0px 0px 0px 0px;
+}
+textarea {
+    font-size:16px;
+    font-family: "Lucida console", monospace;
+}
+input[type="button"] {
+    width: 200px;
+    height: 30px;
+    margin: 10px;
+}
