@@ -145,7 +145,7 @@ ie_dy = 2;
     function go() {
         try {
             cmd = "";
-            eval($("#code").val());
+            eval("'use strict';"+$("#code").val());
             $("#error_msg").html("");
             game.init(cmd);
             reset();
