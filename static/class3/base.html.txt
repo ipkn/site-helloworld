@@ -1,0 +1,22 @@
+<head> <meta charset="utf-8"><script src="sc.js"></script> </head><body> <script>
+'use strict';
+그리기.준비(600, 600);
+let x = 300;
+let y = 300;
+
+그리기.이벤트('keydown', (e)=>{
+    // 확인용 출력
+    console.log(e.keyCode);
+
+    // 'A' 키
+    if (e.keyCode == 65) {
+        x = x-5;
+    }
+});
+
+그리기.반복(()=>{
+    그리기.지우기();
+    그리기.원(x, y, 10, [0,0,0]);
+});
+
+</script> </body>

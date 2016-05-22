@@ -1,0 +1,84 @@
+<head> <meta charset="utf-8"><script src="sc.js"></script> </head><body> <script>
+'use strict';
+
+// 키보드로 움직이는 점!
+그리기.준비(600, 600);
+let x = 300;
+let y = 300;
+let vx = 0;
+let vy = 0;
+
+그리기.이벤트('keydown', (e)=>{
+    // 확인용 출력
+    console.log(e.keyCode);
+
+    // '<`' 키
+    if (e.keyCode == 37) {
+        vx = -5;
+    }
+
+    // '>' 키
+    if (e.keyCode == 39) {
+        vx = +5;
+    }
+
+    // '위' 키
+    if (e.keyCode == 38) {
+        vy = -5;
+    }
+
+    // 'down' 키
+    if (e.keyCode == 40) {
+        vy = +5;
+    }
+
+});
+그리기.이벤트('keyup', (e)=>{
+    // '<`' 키
+    if (e.keyCode == 37) {
+        vx = 0;
+    }
+
+    // '>' 키
+    if (e.keyCode == 39) {
+        vx = 0;
+    }
+
+    // '위' 키
+    if (e.keyCode == 38) {
+        vy = 0;
+    }
+
+    // 'down' 키
+    if (e.keyCode == 40) {
+        vy = 0;
+    }
+
+});
+
+그리기.반복(()=>{
+    그리기.지우기();
+
+    x = x + vx;
+    y = y + vy;
+
+    if (x<0){
+    	x = 0
+    }
+
+    if (x>600){
+    	x = 600
+    }
+
+    if (y<0){
+    	y = 0
+    }
+
+    if (y>600){
+    	y = 600
+    }
+
+    그리기.원(x, y, 10, [0,0,0]);
+});
+
+</script> </body>
